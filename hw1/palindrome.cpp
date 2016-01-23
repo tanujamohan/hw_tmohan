@@ -21,13 +21,16 @@ bool helper(stringstream &input, int len)
 	 * and return true.
 	 */
 	input >> prev;
+
 	
 	if (len == 1) return true;
    
 	bool val = helper(input, len-2);
 
 	//make your changes below this line.
-	if (val) return true;
+	if (val) {
+	   return true;
+	}
 	return false;
 }
 
@@ -40,6 +43,7 @@ int main(int argc, char* argv[])
   }
   stringstream ss;
   ss << argv[1];
+
   if(helper(ss, strlen(argv[1])))
 	  cout << "Palindrome" << endl;
   else cout << "Not a Palindrome" << endl;
