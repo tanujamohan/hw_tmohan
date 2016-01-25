@@ -1,0 +1,16 @@
+Floor 1 Student 1 possessions: 
+hello
+bye
+hello
+bye
+Floor 1 Student 5 possessions: 
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
