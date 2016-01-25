@@ -1,6 +1,15 @@
+/*
+Name: Tanuja Mohan
+Description: Question 6 for HW1
+
+*/
+
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <cstdlib>
 
 using namespace std;
 
@@ -28,7 +37,13 @@ int main(int argc, char* argv[])
 	  floorsizes[i] = 0;
 	  trojans[i] = NULL;
   }
+  
+  //used to allow the first line in the file (the floor number) to not 
+  //be considered an incorrect line
+  int counter = 0;
+  
   while(getline(input, curr)) {
+     counter++;
 	  stringstream ss;
 	  ss << curr;
 	  ss >> curr;
@@ -90,9 +105,11 @@ int main(int argc, char* argv[])
 	  else if (curr == "MOVEOUT") {
 	     int i, dummy;
 	     ss >> i;
+	     bool isValue = true;
 	     if (ss.fail())
 	     {
 	        output << "Error - incorrect command" << endl;
+	        isValue = false;
 	     }
 	     
 	     ss >> dummy;
@@ -100,45 +117,52 @@ int main(int argc, char* argv[])
 	     {
 	        output << "Error - incorrect command" << endl;
 	     }
-	  
-	     //check if the floor exists and is empty
-		  bool floorExists = false;
-		  bool isEmpty = false;
-		  for (int f = 0; f < floors; f++)
-		  {
-		     if ( i == f )
+	     if (isValue)
+	     {
+	        //check if the floor exists and is empty
+		     bool floorExists = false;
+		     bool isEmpty = false;
+		     for (int f = 0; f < floors; f++)
 		     {
-		        floorExists = true;
-		        if ( floorsizes[i] == 0 )
+		        if ( i == f )
 		        {
-		           isEmpty = true;
-		        }
-		     }  
-		  }
-		  
-		  if (!floorExists)
-		  {
-		     output << "Error - floor " << i << " does not exist" << endl;
-		  } 
-		  else if (isEmpty)
-		  {
-		     output << "Error - floor " << i;
-		     output << " does not have students" << endl;
-		  }
-		  else if (!isEmpty)
-		  { 
-		     //clear out the entire floor by deallocating memory
-		     for (int s = 0; s < floorsizes[i]; s++)
+		           floorExists = true;
+		           if ( floorsizes[i] == 0 )
+		           {
+		              isEmpty = true;
+		           }
+		        }  
+		     }
+		     
+		     if (!floorExists)
 		     {
-		        if (trojans[i][s] == NULL)
-		        {
-		          delete[] trojans[i][s];
-		          trojans[i][s] = NULL;
-		        }
+		        output << "Error - floor " << i << " does not exist" << endl;
 		     } 
-		     delete[] trojans[i];
-		     trojans[i] = NULL;
-		     floorsizes[i] = 0;
+		     else if (isEmpty)
+		     {
+		        output << "Error - floor " << i;
+		        output << " does not have students" << endl;
+		     }
+		     else if (!isEmpty)
+		     { 
+		        //clear out the entire floor by deallocating memory
+		        for (int s = 0; s < floorsizes[i]; s++)
+		        {
+		           if (trojans[i][s] == NULL)
+		           {
+		             delete[] trojans[i][s];
+		             trojans[i][s] = NULL;
+		           }
+		           else if (trojans[i][s] != NULL)
+		           {
+		              delete[] trojans[i][s];
+		              trojans[i][s] = NULL;
+		           }
+		        } 
+		        delete[] trojans[i];
+		        trojans[i] = NULL;
+		        floorsizes[i] = 0;
+		     }
 		  }
 
 	  }
@@ -146,7 +170,13 @@ int main(int argc, char* argv[])
 	  else if (curr == "OBTAIN") {
 	     int i, j, k;
 	     ss >> i;
+	     if (ss.fail()) {
+			  output << "Error - incorrect command" << endl;
+		  }
 	     ss >> j;
+	     if (ss.fail()) {
+			  output << "Error - incorrect command" << endl;
+		  }
 	     ss >> k;
 	     if (ss.fail()) {
 			  output << "Error - incorrect command" << endl;
@@ -180,7 +210,8 @@ int main(int argc, char* argv[])
 		  }
 		  else if (!studentExists)
 		  {
-		     output << "Error - student " << j << " does not exist" << endl;
+		     output << "Error - student " << j << " does not exist";
+		     output << " on this floor" << endl;
 		  }
 		  else if (hasPossessions)
 		  {
@@ -189,8 +220,11 @@ int main(int argc, char* argv[])
 		  else
 		  {
 		      //add the possessions to the student
-		      trojans[i][j] = new string[k];
-		      for (int p = 0; p < k; p++)
+		      trojans[i][j] = new string[k + 1];
+		      stringstream convert;
+		      convert << k + 1;
+		      trojans[i][j][0] = convert.str();
+		      for (int p = 1; p < k + 1; p++)
 		      {
 		         ss >> trojans[i][j][p];
 		      }
@@ -208,6 +242,13 @@ int main(int argc, char* argv[])
            output << "Error - incorrect command" << endl;
         }
         
+        int dummy;
+        ss >> dummy;
+        if (!ss.fail())
+        {
+           output << "Error - incorrect command" << endl;
+        }
+    
         //check if the student exists
         bool studentExists = false;
         for (int s = 0; s < floorsizes[i]; s++)
@@ -218,7 +259,7 @@ int main(int argc, char* argv[])
            }
         }
         
-        //check if the student already has possessions
+        //check if the student has possessions
 		  bool hasPossessions = false;
 		  if (studentExists)
 		  {
@@ -227,7 +268,7 @@ int main(int argc, char* argv[])
 		        hasPossessions = true;
 		     }
 		  }
-        
+ 
         if (!studentExists)
         {
            output << "Error - student " << j << " does not exist";
@@ -241,15 +282,19 @@ int main(int argc, char* argv[])
         {
            output << "Floor " << i << " Student " << j << " possessions: ";
            output << endl;
-           for (int p = 0; p < trojans[i][j]->size(); p++)
+           
+           for (int p = 1; p < atoi(trojans[i][j][0].c_str()); p++)
            {
               //print out the possessions for the student
               output << trojans[i][j][p] << endl;
            }
+      
         }
         
 	  }
 	  else {
+	     if (counter != 1)
+	        output << "Incorrect command" << endl;
 
 	  }
   }
@@ -263,7 +308,6 @@ int main(int argc, char* argv[])
         trojans[f][s] = NULL;
      }
      delete[] trojans[f];
-     //trojans[f] = NULL;
   }
 
   delete[] trojans;
