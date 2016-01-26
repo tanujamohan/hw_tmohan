@@ -30,8 +30,13 @@ bool helper(stringstream &input, int len)
 	//make your changes below this line.
 	char nextLetter;
 	input >> nextLetter;
-	if (val && nextLetter == prev) {
-	   return true;
+	if (val)
+	{
+	   if (nextLetter == prev) 
+	   {
+	      return true;
+	   }
+	   return false;
 	}
 	return false;
 }
