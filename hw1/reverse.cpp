@@ -2,7 +2,8 @@
 
 Name: Tanuja Mohan
 
-Description: Read from a file and reverse the content of the file, printing each word on a different line. This is problem 5 of CS104 Assingment 1.
+Description: Read from a file and reverse the content of the file, printing
+ each word on a different line. This is problem 5 of CS104 Assingment 1.
 
 */
 
