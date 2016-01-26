@@ -28,7 +28,9 @@ bool helper(stringstream &input, int len)
 	bool val = helper(input, len-2);
 
 	//make your changes below this line.
-	if (val) {
+	char nextLetter;
+	input >> nextLetter;
+	if (val && nextLetter == prev) {
 	   return true;
 	}
 	return false;
